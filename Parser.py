@@ -1,5 +1,8 @@
-from ExpNum import ExpNum
 
+class ExpNum:
+    def __init__(self, num):
+        self.tag = "NUMERO"
+        self.num = num
 
 class ExpRaiz:
     def __init__(self,e1):
@@ -13,10 +16,10 @@ class ExpPar:
 
 
 class ComandoAtribuicao:
-    def __init__(self,nome,valor):
+    def __init__(self,nome,e1):
         self.tag = "ATRIBUICAO"
         self.nome = nome
-        self.valor = valor
+        self.e1 = e1
 
 class ComandoPrint:
     def __init__(self,e1):
@@ -54,7 +57,7 @@ class ExpVar:
         self.tag = "VAR"
         self.nome = nome
 
-class expRaizDaArvore:
+class ExpRaizDaArvore:
     def __init__(self,vars,prints):
         self.tag = "RAIZARVORE"
         self.vars = vars
@@ -77,7 +80,7 @@ class Parser:
     def parseS(self):
         e = self.parseVS()
         p = self.parsePS()
-        raiz = expRaizDaArvore(e,p)
+        raiz = ExpRaizDaArvore(e,p)
         return raiz
     
     def parseF(self):

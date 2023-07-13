@@ -2,8 +2,9 @@ import re
 import sys
 from Token import Token
 from collections import deque
-from Parser import Parser
+from Parser import Parser, ExpAdd,ExpNum, ExpNeg, ExpMul, ExpDiv, ExpPar, ExpSub, ExpRaiz
 tokens = deque([])
+
 
 
 def read_file(input):
@@ -48,7 +49,7 @@ def analysis(text):
         elif type_name == "NOME" and Valor in keywords:
           type_name = "KEYWORD"
         if(type_name != "ESPAÇO"):
-            token = Token(type_name, Valor)
+            token = Token(type_name, Valor) if type_name!="NUMERO" else Token(type_name, float(Valor))
             tokens.append(token)
         text = text[end_match:]
         break
@@ -62,14 +63,47 @@ tokens.append(Token("EOF",None))
 parse = Parser(tokens)
 raiz = parse.parseS()
 
+exp = ExpMul(ExpAdd(ExpNeg(ExpNum(5)), ExpNum(8)), ExpSub(ExpRaiz(ExpNum(25)), ExpPar(ExpMul(ExpNum(3),ExpNum(3))))) 
+
+
+def calcula(exp,env):
+  if(exp.tag == "ADICAO"):
+    return calcula(exp.e1,env) + calcula(exp.e2,env)
+  elif(exp.tag == "NUMERO"):
+    return exp.num
+  elif(exp.tag == "SUBTRACAO"):
+    return calcula(exp.e1,env) - calcula(exp.e2,env)
+  elif(exp.tag == "MULTIPLICACAO"):
+    return calcula(exp.e1,env) * calcula(exp.e2,env)
+  elif(exp.tag == "DIVISAO"):
+    return calcula(exp.e1,env) / calcula(exp.e2,env)
+  elif(exp.tag == "NEGATIVO"):
+    return -calcula(exp.e1,env)
+  elif(exp.tag =="VAR"):
+    return env[exp.nome]
+  elif(exp.tag == "PARENTESES"):
+    return calcula(exp.e1,env)
+  elif(exp.tag == "RAIZQUADRADA"):
+    return (calcula(exp.e1,env))**(1/2)
+  elif(exp.tag == "ATRIBUICAO"):
+    env[exp.nome] = calcula(exp.e1,env)
+    return env[exp.nome]
+  elif(exp.tag == "PRINT"):
+    print(calcula(exp.e1, env))
+  elif(exp.tag=="RAIZARVORE"):
+    for var in exp.vars:
+      calcula(var, env)
+    for pri in exp.prints:
+      calcula(pri, env)
+  else:
+    print(exp)
+    assert(False)
 
 
 def printRaiz(raiz):
-  if(raiz.tag):
-    vars = raiz.vars
-    prints = raiz.prints
-    for var in vars:
-      print(var.tag, var.nome, var.valor.e1)
-    for pri in prints:
-      print(pri.e1)
+  env = {}
+  calcula(raiz,env)
+    
+  
+    
 printRaiz(raiz)
