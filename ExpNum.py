@@ -1,5 +1,5 @@
 
 class ExpNum:
-    def __init__(self, num):
+    def __init__(self, e1):
         self.tag = "ExpNum"
-        self.num = num
+        self.e1 = e1

@@ -2,19 +2,15 @@ import re
 import sys
 from Token import Token
 from collections import deque
+from Parser import Parser
 tokens = deque([])
 
 
-def read_file(arg_list):
-  if len(arg_list) == 2:
-    file=arg_list[1]
-  else:
-    file="lexer.py"
-  with open(file, encoding="utf8") as f:
-    text = f.read()
-    lines = text.split("\n")
-    for line in lines:
-      analysis(line)
+def read_file(input):
+  text = input.read()
+  lines = text.split("\n")
+  for line in lines:
+    analysis(line)
 
 def analysis(text):
   
@@ -29,7 +25,8 @@ def analysis(text):
     "MAIS": r"\+",
     "MULTIPLICA": r"\*",
     "DIVISAO": r"\/",
-    "PARENTESES":  r"\(|\)",
+    "PARENTESESABRE":  r"\(",
+    "PARENTESESFECHA":  r"\)",
     "ARROBA": r"@"
   }
 
@@ -55,11 +52,15 @@ def analysis(text):
             tokens.append(token)
         text = text[end_match:]
         break
-      if attemp == 7:
+      if attemp == 11:
         print("ERRO!")
         break
 
-read_file(sys.argv)
 
-for token in tokens:
-    print(token)
+read_file(sys.stdin)
+tokens.append(Token("EOF",None))
+parse = Parser(tokens)
+raiz = parse.parseS()
+
+
+print(raiz)
