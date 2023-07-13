@@ -2,14 +2,14 @@ from ExpNum import ExpNum
 
 
 class ExpRaiz:
-    def __init__(self,e):
+    def __init__(self,e1):
         self.tag = "RAIZQUADRADA"
-        self.e = e
+        self.e1 = e1
 
 class ExpPar:
-    def __init__(self,e):
+    def __init__(self,e1):
         self.tag = "PARENTESES"
-        self.e = e
+        self.e1 = e1
 
 
 class ComandoAtribuicao:
@@ -66,12 +66,12 @@ class Parser:
         self.Tokens = Tokens
 
     def peek(self, tag):
-        return self.Tokens[0] == tag
+        return self.Tokens[0].tag == tag
     
     def consome(self, tag):
-        if(not self.nextToken.tag == tag):
+        if(not self.Tokens[0].tag == tag):
             return SyntaxError
-        token = self.Tokens.popleft()
+        token = self.Tokens.popleft().value
         return token
     
     def parseS(self):
@@ -134,12 +134,12 @@ class Parser:
 
 
     def parseVS(self):
-        variaveis = [] 
+        variaveis = []
         while self.peek("NOME"):
             var = self.consome("NOME")
             self.consome("IGUAL")
             exp = self.parseE()
-            variaveis.append(ComandoAtribuicao(var,exp))  
+            variaveis.append(ComandoAtribuicao(var,exp))
         return variaveis
     def parsePS(self):
         prints = [] 
