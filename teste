@@ -1,6 +1,3 @@
-a = 1
-b = 20
-c = 30
-d = sqrt(b*b - 4*a*c)
-@ (-b + d)/(2*a)
-@ (-b - d)/(2*a)
+alo = sqrt(25) + sqrt(16)
+bia = 28
+@ (alo + 50*8) * bia
